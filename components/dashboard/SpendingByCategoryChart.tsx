@@ -28,9 +28,22 @@ function CustomTooltip({
   if (!active || !payload?.length) return null;
   const { value, payload: item } = payload[0];
   return (
-    <div className="bg-popover border border-border rounded-lg px-3 py-2 text-sm shadow-md">
-      <p className="font-medium text-popover-foreground">{item.label}</p>
-      <p className="font-mono text-muted-foreground">{formatCurrency(value)}</p>
+    <div
+      className="rounded-lg px-3.5 py-2.5 text-sm shadow-xl"
+      style={{
+        background: "var(--color-card)",
+        border: `1px solid ${item.color}40`,
+        boxShadow: `0 8px 32px rgb(0 0 0 / 40%), 0 0 0 1px ${item.color}20`,
+      }}
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <div
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: item.color }}
+        />
+        <p className="font-medium text-foreground">{item.label}</p>
+      </div>
+      <p className="font-mono text-muted-foreground pl-4">{formatCurrency(value)}</p>
     </div>
   );
 }
@@ -40,7 +53,7 @@ export function SpendingByCategoryChart({ data }: SpendingByCategoryChartProps) 
     return (
       <Card className="rounded-xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold tracking-tight">
+          <CardTitle className="text-sm font-mono tracking-[0.12em] uppercase text-muted-foreground">
             Spending by Category
           </CardTitle>
         </CardHeader>
@@ -53,8 +66,8 @@ export function SpendingByCategoryChart({ data }: SpendingByCategoryChartProps) 
 
   return (
     <Card className="rounded-xl border-border">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-bold tracking-tight">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-mono tracking-[0.12em] uppercase text-muted-foreground">
           Spending by Category
         </CardTitle>
       </CardHeader>
@@ -63,26 +76,29 @@ export function SpendingByCategoryChart({ data }: SpendingByCategoryChartProps) 
           <BarChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="oklch(1 0 0 / 8%)"
+              stroke="var(--color-border)"
               vertical={false}
             />
             <XAxis
               dataKey="label"
-              tick={{ fill: "oklch(0.708 0 0)", fontSize: 12 }}
+              tick={{ fill: "var(--color-muted-foreground)", fontSize: 11, fontFamily: "var(--font-geist-mono)" }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "oklch(0.708 0 0)", fontSize: 12 }}
+              tick={{ fill: "var(--color-muted-foreground)", fontSize: 11, fontFamily: "var(--font-geist-mono)" }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => `$${v}`}
-              width={50}
+              width={48}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "oklch(1 0 0 / 5%)" }} />
-            <Bar dataKey="total" radius={[6, 6, 0, 0]}>
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: "var(--color-muted)" }}
+            />
+            <Bar dataKey="total" radius={[6, 6, 2, 2]} maxBarSize={48}>
               {data.map((entry) => (
-                <Cell key={entry.category} fill={entry.color} />
+                <Cell key={entry.category} fill={entry.color} fillOpacity={0.85} />
               ))}
             </Bar>
           </BarChart>

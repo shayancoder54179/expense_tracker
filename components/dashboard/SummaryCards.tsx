@@ -20,24 +20,28 @@ export function SummaryCards({ stats }: SummaryCardsProps) {
         value={formatCurrency(stats.totalSpent)}
         icon={DollarCircleIcon}
         iconClassName="bg-blue-500/15 text-blue-400"
+        accentColor="var(--color-blue-500)"
       />
       <SummaryCard
         label="This Month"
         value={formatCurrency(stats.thisMonthTotal)}
         icon={Calendar03Icon}
         iconClassName="bg-green-500/15 text-green-400"
+        accentColor="var(--color-green-500)"
       />
       <SummaryCard
         label="Top Category"
         value={stats.topCategory}
         icon={Tag01Icon}
         iconClassName="bg-purple-500/15 text-purple-400"
+        accentColor="var(--color-purple-500)"
       />
       <SummaryCard
         label="Total Expenses"
         value={String(stats.expenseCount)}
         icon={ReceiptDollarIcon}
         iconClassName="bg-orange-500/15 text-orange-400"
+        accentColor="var(--color-orange-500)"
       />
     </div>
   );

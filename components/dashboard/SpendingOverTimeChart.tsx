@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -28,9 +28,16 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-popover border border-border rounded-lg px-3 py-2 text-sm shadow-md">
-      <p className="font-medium text-popover-foreground">{label}</p>
-      <p className="font-mono text-muted-foreground">
+    <div
+      className="rounded-lg px-3.5 py-2.5 text-sm shadow-xl"
+      style={{
+        background: "var(--color-card)",
+        border: "1px solid var(--color-border)",
+        boxShadow: "0 8px 32px rgb(0 0 0 / 40%)",
+      }}
+    >
+      <p className="text-muted-foreground font-mono text-xs mb-1">{label}</p>
+      <p className="font-mono font-semibold text-foreground">
         {formatCurrency(payload[0].value)}
       </p>
     </div>
@@ -46,6 +53,8 @@ function formatAxisDate(dateStr: string): string {
   return dateStr.slice(5);
 }
 
+const ACCENT = "var(--color-sidebar-primary)";
+
 export function SpendingOverTimeChart({ data }: SpendingOverTimeChartProps) {
   const chartData = data.map((d) => ({
     ...d,
@@ -56,7 +65,7 @@ export function SpendingOverTimeChart({ data }: SpendingOverTimeChartProps) {
     return (
       <Card className="rounded-xl border-border">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold tracking-tight">
+          <CardTitle className="text-sm font-mono tracking-[0.12em] uppercase text-muted-foreground">
             Spending Over Time
           </CardTitle>
         </CardHeader>
@@ -69,45 +78,61 @@ export function SpendingOverTimeChart({ data }: SpendingOverTimeChartProps) {
 
   return (
     <Card className="rounded-xl border-border">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-bold tracking-tight">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-mono tracking-[0.12em] uppercase text-muted-foreground">
           Spending Over Time
         </CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={220}>
-          <LineChart
+          <AreaChart
             data={chartData}
             margin={{ top: 4, right: 4, left: 0, bottom: 0 }}
           >
+            <defs>
+              <linearGradient id="timeGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={ACCENT} stopOpacity={0.25} />
+                <stop offset="100%" stopColor={ACCENT} stopOpacity={0.01} />
+              </linearGradient>
+            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="oklch(1 0 0 / 8%)"
+              stroke="var(--color-border)"
               vertical={false}
             />
             <XAxis
               dataKey="label"
-              tick={{ fill: "oklch(0.708 0 0)", fontSize: 12 }}
+              tick={{ fill: "var(--color-muted-foreground)", fontSize: 11, fontFamily: "var(--font-geist-mono)" }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fill: "oklch(0.708 0 0)", fontSize: 12 }}
+              tick={{ fill: "var(--color-muted-foreground)", fontSize: 11, fontFamily: "var(--font-geist-mono)" }}
               axisLine={false}
               tickLine={false}
               tickFormatter={(v) => `$${v}`}
-              width={50}
+              width={48}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Line
+            <Area
               type="monotone"
               dataKey="total"
-              stroke="oklch(0.488 0.243 264.376)"
+              stroke={ACCENT}
               strokeWidth={2}
-              dot={{ fill: "oklch(0.488 0.243 264.376)", r: 4 }}
-              activeDot={{ r: 6 }}
+              fill="url(#timeGradient)"
+              dot={{
+                fill: ACCENT,
+                r: 3.5,
+                strokeWidth: 0,
+              }}
+              activeDot={{
+                r: 5.5,
+                fill: ACCENT,
+                stroke: "var(--color-card)",
+                strokeWidth: 2,
+              }}
             />
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
